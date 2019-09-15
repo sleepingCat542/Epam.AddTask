@@ -69,7 +69,7 @@ namespace File_Cabinet
         /// <param name="dateBirth">Date of birth</param>
         public Record(string fName, string lName, DateTime dateBirth)
         {
-            _index = Index;
+            Index = _index;
             this.FirstName = fName;
             this.LastName = lName;
             DateOfBirth = dateBirth;

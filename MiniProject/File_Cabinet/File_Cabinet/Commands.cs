@@ -25,10 +25,6 @@ namespace File_Cabinet
                 {"stat", "GetStat"},
                 {"find", "Find"},
                 {"edit", "EditRecord"},
-                {"remove", "RemoveRecord"},
-                {"stat", "GetStat"},
-                {"find", "Find"},
-                {"edit", "EditRecord"},
                 {"remove", "RemoveRecord"}
             };
 
@@ -411,6 +407,10 @@ namespace File_Cabinet
             }
         }
         #endregion
+
+        Purge
+
+
     }
 
 
