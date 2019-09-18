@@ -11,21 +11,25 @@ namespace File_Cabinet
     {
         static void Main(string[] args)
         {
+
             while (true)
             {
                 Console.Write(">");
                 string commandString = Console.ReadLine();
                 if (Commands.CommandsDictionary.ContainsKey(commandString))
                 {
-                    var command = Commands.CommandsDictionary[commandString];
-                    MethodInfo methodInfo = typeof(Commands).GetMethod(command);
-                    methodInfo.Invoke(null, null);
+
+                        var command = Commands.CommandsDictionary[commandString];
+                        MethodInfo methodInfo = typeof(Commands).GetMethod(command);
+                        methodInfo.Invoke(null, null);
+
+                }
+                else
+                {
+                    Console.WriteLine("Unknown command");
                 }
 
             }
-
         }
-                      
     }
 }
-

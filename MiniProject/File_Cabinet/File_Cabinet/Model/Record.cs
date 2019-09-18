@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File_Cabinet
+namespace File_Cabinet.Model
 {
     /// <summary>
     /// Class that provides record
@@ -14,7 +14,7 @@ namespace File_Cabinet
         /// <summary>
         /// Variable for auto increase index
         /// </summary>
-        static int IndexNumber=1;
+        static int IndexNumber = 1;
 
         /// <summary>
         /// Array with free index. Free index is formed after deleting a record
@@ -35,11 +35,11 @@ namespace File_Cabinet
             get => _index;
             set
             {
-                if (_arrayOfFreeIndices.Count!=0)
-                foreach(int freeIndex in _arrayOfFreeIndices)
-                {
+                if (_arrayOfFreeIndices.Count != 0)
+                    foreach (int freeIndex in _arrayOfFreeIndices)
+                    {
                         _index = freeIndex;
-                }
+                    }
                 else
                     _index = IndexNumber++;
             }
@@ -69,7 +69,6 @@ namespace File_Cabinet
         /// <param name="dateBirth">Date of birth</param>
         public Record(string fName, string lName, DateTime dateBirth)
         {
-            Index = _index;
             this.FirstName = fName;
             this.LastName = lName;
             DateOfBirth = dateBirth;
@@ -84,12 +83,11 @@ namespace File_Cabinet
         /// <param name="dateBirth">Date of birth</param>
         public Record(int index, string fName, string lName, DateTime dateBirth)
         {
-            this.Index=index;
+            this.Index = index;
             this.FirstName = fName;
             this.LastName = lName;
             DateOfBirth = dateBirth;
         }
 
     }
-
 }
