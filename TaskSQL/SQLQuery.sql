@@ -53,7 +53,7 @@ group by Countries.CountryName
 having count(Companies.CompanyName)>1
 order by CustomerCount desc;
 
---9!!
+--9
 --Напишите запрос, который выводит среднюю стоимость фрахта (dbo.Orders.Freight) заказов для компаний-заказчиков,
 --которые указывали местом доставки заказа город, принадлежащий Великобритании или Канаде.
 --Дополнительным критерием выборки является значение средней стоимости фрахта заказа - больше или равно 100, или меньше 10.
@@ -61,10 +61,9 @@ order by CustomerCount desc;
 select round(avg(cast(dbo.Orders.Freight as float(4))),0) [FreightAvg], CustomerID
 from Orders inner join Customers 
 on Orders.CompanyName=Customers.CompanyName 
-where Customers.CountryName in('Канада', 'Великобритания') 
-and (FreightAvg >=100 or FreightAvg<10)
+where (Customers.CountryName in('Канада', 'Великобритания') 
+and (FreightAvg >=100 or FreightAvg<10))
 order by FreightAvg desc;
-
 
 
 
@@ -90,28 +89,37 @@ Fetch Next 1 Rows Only;
 --которых больше или равна средней величине стоимости фрахта всех заказов, а также дата отгрузки заказа должна находится
 --во второй половине июля 1996 года. Результирующая таблица должна иметь колонки CustomerID и FreightSum,
 --строки которой должны быть отсортированы по сумме фрахтов заказов.
-select sum(Orders.Freight) from Orders
+select sum(Orders.Freight)[FrightSum], CustomerID 
+from Orders inner join Customers on Orders.CompanyName=Customers.CompanyName
+where (Orders.Freight>=avg(Orders.Freight) and Orders.ShippingDate between '1996-07-15' and '1996-07-31')
+order by sum(Orders.Freight)
+
+
 
 --13
 --Напишите запрос, который выводит 3 заказа с наибольшей стоимостью, которые были созданы после 1 сентября 1997 года
 --включительно и были доставлены в страны Южной Америки. Общая стоимость рассчитывается как сумма стоимости деталей
 --заказа с учетом дисконта. Результирующая таблица должна иметь колонки CustomerID, ShipCountry и OrderPrice, строки
 --которой должны быть отсортированы по стоимости заказа в обратном порядке.
+select top (3) CustomerID, DeliveryCountry[ShipCountry], OrderPrice  
+from Orders inner join Customers on  Orders.CompanyName=Customers.CompanyName
+inner join Countries on Customers.Country=Countries.CountryName
+where (CreateData>='1997-09-01' and Countries.CountryName in ('Бразилия', 'Перу', 'Чили')) order by OrderPrice desc
 
 
---14
+--14!!!
 --Перепишите запрос с использованием группировки:
-SELECT DISTINCT s.CompanyName,
-(SELECT min(t.UnitPrice) FROM dbo.Products as t WHERE t.SupplierID = p.SupplierID) as MinPrice,
-(SELECT max(t.UnitPrice) FROM dbo.Products as t WHERE t.SupplierID = p.SupplierID) as MaxPrice
-FROM dbo.Products AS p
-INNER JOIN dbo.Suppliers AS s ON p.SupplierID = s.SupplierID
-ORDER BY s.CompanyNam
+
 
 --15
 --Напишите запрос, который выводит список компаний-заказчиков из Лондона, которые делали заказы у сотрудников лондонского офиса
 --и заказали доставку через службу Speedy Express. Результирующая таблица должна иметь колонки Customer и Employee,
 --колонка Employee должна содержать FirstName и LastName сотрудника.
+select CompanyName[Customer], (select CONCAT(Employee.FirstName, ' ', Employee.Surname))[Employee] from 
+Employee inner join Companies on Employee.EmployeeID=Companies.Director
+inner join Customers on Customers.CompanyName=Companies.CompanyName
+where Orders.Service='Speedy Express' and Companies.CompanyName=Customers.CompanyName and Companies.City='Лондон'
+
 
 
 --16
@@ -119,3 +127,8 @@ ORDER BY s.CompanyNam
  --которые можно заказать у поставщиков (Discontinued) и которые остались на складе в количестве меньше 20 штук.
   --Результирующая таблица должна иметь колонки ProductName, UnitsInStock, ContactName и Phone поставщика.
    --Строки таблицы должны быть отсортированы по значению складского запаса.
+select ProductName, UnitsInStock, Surname[ContactName], Phone 
+from Employee inner join Companies on Employee.EmployeeID=Companies.Director
+inner join Products on Companies.CompanyName=Products.Discontinued 
+where Products.Categories in ('Beverages', 'Seafood') and UnitsInStock>20 
+order by UnitsInStock
