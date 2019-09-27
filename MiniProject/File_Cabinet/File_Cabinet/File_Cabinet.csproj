@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logics\Commands.cs" />
+    <Compile Include="Logics\HelpLogic.cs" />
     <Compile Include="Model\Record.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

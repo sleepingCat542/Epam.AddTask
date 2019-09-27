@@ -49,32 +49,25 @@ namespace File_Cabinet
         /// </summary>
         public static void  CreateRecord()
         {
-            Console.Write("First name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Last name: ");
-            string lastName = Console.ReadLine();           
+            
+                List<string> ListNames=Logics.HelpLogic.WriteNames();
             try
             {
-                if (firstName == String.Empty)
-                throw new Exception("You forgot to enter a name");
-                if (lastName == String.Empty)
-                throw new Exception("You forgot to enter a surname");
-                if (lastName.Length>60 || firstName.Length > 60)
-                throw new Exception("Line length cannot exceed 60 characters");
-
+                if(ListNames!=null)
+                { 
                 Console.Write("Date of birth: ");
                 DateTime dateOfBirth = DateTime.Parse(Console.ReadLine());
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                   connection.Open();
-                   string sqlString = $"INSERT INTO Records([FirstName], [LastName], [Date]) VALUES(N'{firstName}', N'{lastName}', N'{dateOfBirth.ToString("s")}')";
-                   SqlCommand command = new SqlCommand(sqlString, connection);
-                   command.ExecuteNonQuery();
-                   sqlString = $"SELECT TOP 1 Id FROM Records ORDER BY Id DESC;";
-                   command = new SqlCommand(sqlString, connection);
-                    
-                   Console.WriteLine($"Record #{command.ExecuteScalar()} is created!");
-                        
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        string sqlString = $"INSERT INTO Records([FirstName], [LastName], [Date]) VALUES(N'{ListNames[0]}', N'{ListNames[1]}', N'{dateOfBirth.ToString("s")}')";
+                        SqlCommand command = new SqlCommand(sqlString, connection);
+                        command.ExecuteNonQuery();
+                        sqlString = $"SELECT TOP 1 Id FROM Records ORDER BY Id DESC;";
+                        command = new SqlCommand(sqlString, connection);
+
+                        Console.WriteLine($"Record #{command.ExecuteScalar()} is created!");
+                    }     
                 }
             }
             catch (FormatException e)
@@ -291,23 +284,26 @@ namespace File_Cabinet
             /// <param name="ind">Index of the record to replace</param>
             public static void EditRecord()
             {
-            Console.WriteLine("#");
-            int ind = Convert.ToInt32(Console.ReadLine());
-            Console.Write("First name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Last name: ");
-            string lastName = Console.ReadLine();
-            Console.Write("Date of birth: ");
             try
             {
-                DateTime dateOfBirth = DateTime.Parse(Console.ReadLine());
-                using (SqlConnection connection = new SqlConnection(connectionString))
+
+                Console.WriteLine("#");
+            int ind = Convert.ToInt32(Console.ReadLine());
+                List<string> ListNames = Logics.HelpLogic.WriteNames();
+                if (ListNames != null)
                 {
-                    string sqlString = $"UPDATE Records SET FirstName = {firstName}, LastName = {lastName}, Date={dateOfBirth.ToString("s")} WHERE index = {ind};";
-                    SqlCommand command = new SqlCommand(sqlString, connection);
-                    command.ExecuteNonQuery();
+                    Console.Write("Date of birth: ");
+
+                    DateTime dateOfBirth = DateTime.Parse(Console.ReadLine());
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        string sqlString = $"UPDATE Records SET FirstName = N'{ListNames[0]}', LastName = N'{ListNames[1]}', Date=N'{dateOfBirth.ToString("s")}' WHERE id = {ind};";
+                        SqlCommand command = new SqlCommand(sqlString, connection);
+                        command.ExecuteNonQuery();
+                    }
+                    Console.WriteLine("Changes saved");
                 }
-                Console.WriteLine("Changes saved");
             }
             catch (FormatException)
             {
@@ -449,7 +445,8 @@ namespace File_Cabinet
             {
                 GetList();
                 string fileName = "exportCSV.csv";
-                using (var csv = new CsvWriter(new StreamWriter(fileName)))
+                using (var writer = new StreamWriter(fileName))
+                using (var csv = new CsvWriter(writer))
                 {
                     csv.WriteRecords(Records);
                 }
@@ -468,21 +465,29 @@ namespace File_Cabinet
         public static void ImportCSV()
         {
             string fileName = "exportCSV.csv";
-                using (var csv = new CsvReader(File.OpenText(fileName)))
+            using (var reader = new StreamReader(fileName))
+                try
                 {
-                    IEnumerable<Record> newRecords = csv.GetRecords<Record>();
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    SqlCommand command;
+                    using (var csv = new CsvReader(reader))
+                    {
+                        var newRecords = csv.GetRecords<Record>().ToList();
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            connection.Open();
+                            SqlCommand command;
                             foreach (Record record in newRecords)
                             {
-                                    string sqlString = $"INSERT INTO Records([FirstName], [LastName], [Date])" +
-                                        $" VALUES( N'{record.FirstName}', N'{record.LastName}', N'{record.DateOfBirth.ToString("s")}')";
-                                   command = new SqlCommand(sqlString, connection);
-                                    command.ExecuteNonQuery();
-                                }
-                            }                                                  
+                                string sqlString = $"INSERT INTO Records([FirstName], [LastName], [Date])" +
+                                    $" VALUES( N'{record.FirstName}', N'{record.LastName}', N'{record.DateOfBirth.ToString("s")}')";
+                                command = new SqlCommand(sqlString, connection);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
             
         }
@@ -554,6 +559,7 @@ namespace File_Cabinet
         {
             Environment.Exit(0);
         }
+
     }
 
 
