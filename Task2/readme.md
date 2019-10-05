@@ -1,1 +1,0 @@
-https://github.com/epam-dotnet-lab/northwind-data-services-task

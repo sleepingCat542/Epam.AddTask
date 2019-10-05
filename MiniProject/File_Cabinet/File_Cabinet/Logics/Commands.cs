@@ -60,11 +60,11 @@ namespace File_Cabinet
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-                        string sqlString = $"INSERT INTO Records([FirstName], [LastName], [Date]) VALUES(N'{ListNames[0]}', N'{ListNames[1]}', N'{dateOfBirth.ToString("s")}')";
+                        string sqlString = $"INSERT INTO Records([FirstName], [LastName], [Date]) output inserted.id VALUES(N'{ListNames[0]}', N'{ListNames[1]}', N'{dateOfBirth.ToString("s")}')";
                         SqlCommand command = new SqlCommand(sqlString, connection);
-                        command.ExecuteNonQuery();
-                        sqlString = $"SELECT TOP 1 Id FROM Records ORDER BY Id DESC;";
-                        command = new SqlCommand(sqlString, connection);
+                        command.ExecuteScalar();
+                        //sqlString = $"SELECT TOP 1 Id FROM Records ORDER BY Id DESC;";
+                        //command = new SqlCommand(sqlString, connection);
 
                         Console.WriteLine($"Record #{command.ExecuteScalar()} is created!");
                     }     
