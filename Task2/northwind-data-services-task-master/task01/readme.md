@@ -175,7 +175,7 @@ Console.WriteLine("{0} customers in the service found.", customers.Length);
 8. Найдите базовый класс, от которого унаследован _NorthwindModel.NorthwindEntities_. 
       DataServiceContext
     * В какой сборке находится базовый класс?
-      Data.Services.Client
+      <br> Data.Services.Client
     * По какому пути лежит эта сборка?
       C:\Program Files (x86)\Microsoft WCF Data Services\5.0\bin\.NETFramework\
     * Какая версия у сборки, в которой находится базовый класс?
