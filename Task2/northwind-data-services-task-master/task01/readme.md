@@ -58,15 +58,21 @@
     * Пройдите ["Basic Tutorial](https://www.odata.org/getting-started/basic-tutorial).
 3. Создайте в Postman новую коллекцию с именем Northwind, в этой коллекции создайте такие запросы к [Northwind OData Service](https://services.odata.org/V2/Northwind/Northwind.svc/), которые будут удовлетворять описанию из таблицы ниже. После проверки запроса, занесите необходимые параметры в таблицу:
 
-| Query Description                                                 | HTTP Verb | Url                        |
-| ----------------------------------------------------------------- | --------- | -------------------------- |
-| Get service metadata.                                             | GET       | /$metadata                 |
-| Get all customers.                                                | GET       |                            |
-| Get a customer with "ALFKI" id.                                   | GET       |                            |
-| Get all orders.                                                   | GET       |                            |
-| Get an order with "10248" id.                                     | GET       |                            |
-| Get all orders for a customer with "ANATR" id.                    | GET       |                            |
-| Get a customer for an order with "10248" id.                      | GET       |                            |
+| Query Description                                                 | HTTP Verb | Url                                                 |
+| ----------------------------------------------------------------- | --------- | ----------------------------------------------------|
+| Get service metadata.                                             | GET       | /$metadata                                          |
+| Get all customers.                                                | GET       | /Customers                                          |
+| Get a customer with "ALFKI" id.                                   | GET       | /Customers('ALFKI')                                 |
+| Get all orders.                                                   | GET       | /Orders                                             |
+| Get an order with "10248" id.                                     | GET       | /Orders(10248)                                      |
+| Get all orders for a customer with "ANATR" id.                    | GET       | /Customers('ANATR')/Orders                          |
+| Get a customer for an order with "10248" id.                      | GET       | /Orders(10248)/Customer             		      |
+| Get all shippers with "Federal Shipping" company name.            | GET       | /Shippers?$filter=CompanyName eq 'Federal Shipping' |
+| Get a country for an employee with "5" id.                        | GET       | /Employees(5)/Country                               |
+| Get a employee id for an order with "10251" id.                   | GET       | /Orders(10251)/EmployeeID                           |
+| Get all customers with "London" city.                             | GET       | /Customers?$filter=City eq 'London'                 |
+| Get all order details where quantity more than 100.               | GET       | /Order_Details?$filter=Quantity gt 100              |
+
 
 Создайте самостоятельно еще минимум 5 сложных запросов и запишите их в таблицу.
 
