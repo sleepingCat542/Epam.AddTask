@@ -283,11 +283,11 @@ Console.ReadLine(); // breakpoint #2.3
 
 | Breakpoint | Thread ID   | Thread Managed ID | Thread Name |
 | ---------- | ----------- | ----------------- | ----------- |
-| #1.1       |             |                   |             |
-| #1.2       |             |                   |             |
-| #1.3       |             |                   |             |
-| #2.1       |             |                   |             |
-| #2.2       |             |                   |             |
-| #2.3       |             |                   |             |
+| #1.1       | 8824        | 1                 | Main thread |
+| #1.2       | 12408       | 7                 | Work thread |
+| #1.3       | 12996       | 1                 | Main thread |
+| #2.1       | 8264        | 1                 | Main thread |
+| #2.2       | 4000        | 8                 | Work thread |
+| #2.3       | 4000        | 8                 | Work thread |
 
 В чем разница между двумя подходами для брейкпоинтов #1.3 и #2.3?
